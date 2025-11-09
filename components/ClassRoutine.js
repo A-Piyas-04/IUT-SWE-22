@@ -1,39 +1,11 @@
 /**
  * ClassRoutine component
  * Modern, accessible weekly schedule card with subtle neon accents.
+ * Reads dynamic routine data from /data/routine.json in public.
  */
-import { Fragment } from "react";
+"use client";
+import { Fragment, useEffect, useMemo, useState } from "react";
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const times = ["09:00", "10:00", "11:00", "12:00", "14:00", "16:00"];
-
-// Placeholder schedule data: { [day]: { [time]: course } }
-const schedule = {
-  Monday: {
-    "09:00": "Algorithms",
-    "11:00": "Database Systems",
-    "14:00": "Software Engineering Lab",
-  },
-  Tuesday: {
-    "10:00": "Operating Systems",
-    "12:00": "Discrete Math",
-    "16:00": "Web Development",
-  },
-  Wednesday: {
-    "09:00": "Computer Networks",
-    "11:00": "Human-Computer Interaction",
-    "14:00": "AI Fundamentals",
-  },
-  Thursday: {
-    "10:00": "Compiler Design",
-    "12:00": "Probability & Statistics",
-    "16:00": "Project Workshop",
-  },
-  Friday: {
-    "09:00": "Data Structures",
-    "11:00": "Cybersecurity",
-    "14:00": "DevOps Basics",
-  },
-};
 
 // Map each day to a softer accent color for variety
 const dayAccent = {
@@ -67,15 +39,96 @@ function cellAccentClasses(day) {
 }
 
 export default function ClassRoutine() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const res = await fetch("/data/routine.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(`Failed to load routine: ${res.status}`);
+        const json = await res.json();
+        if (active) setData(json);
+      } catch (e) {
+        if (active) setError(e);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const timeOrder = useMemo(() => {
+    if (!data) return [];
+    const keys = Object.keys(data.time_slots);
+    const order = ["1", "2", "3", "4", "break", "5", "6"].filter((k) => keys.includes(k));
+    return order;
+  }, [data]);
+
+  function normalizeCode(code) {
+    return code.replace(/\s+/g, "");
+  }
+
+  function resolveCourseLabel(courseRaw, courseNamesMap, coursesList) {
+    // Handle multiple codes separated by '/'
+    const parts = courseRaw.split("/").map((p) => p.trim());
+    const mapped = parts.map((p) => {
+      const norm = normalizeCode(p);
+      const name = courseNamesMap?.[norm];
+      if (name) return `${p} — ${name}`;
+      const found = coursesList?.find((c) => c.code === p || normalizeCode(c.code) === norm);
+      return found ? `${p} — ${found.title}` : p;
+    });
+    return mapped.join(" / ");
+  }
+
+  function resolveInstructors(ids, teachersMap) {
+    if (!ids) return [];
+    return ids.map((id) => teachersMap?.[id] || id);
+  }
+
+  if (loading) {
+    return (
+      <section aria-labelledby="routine-title" className="space-y-4">
+        <div className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm">
+          <div className="p-6">
+            <div className="h-6 w-48 bg-white/10 rounded mb-4" />
+            <div className="h-4 w-full bg-white/5 rounded" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="space-y-4">
+        <div className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm p-6">
+          <p className="text-red-300">{String(error)}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section aria-labelledby="routine-title" className="space-y-4">
-      <div className="card">
+      <div className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm">
         <div className="flex items-end justify-between p-4 sm:p-6 border-b border-white/10">
           <div>
             <h2 id="routine-title" className="text-xl sm:text-2xl font-semibold text-slate-100">
               Weekly Class Routine
             </h2>
-            <p className="text-sm text-slate-400">Organized schedule with accessible, calm neon accents.</p>
+            {data?.institution ? (
+              <p className="text-sm text-slate-400">
+                {data.institution.name} • {data.institution.department} — {data.institution.program}
+              </p>
+            ) : (
+              <p className="text-sm text-slate-400">Organized schedule with accessible, calm neon accents.</p>
+            )}
           </div>
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400">
             <span className="inline-block h-2 w-2 rounded-full bg-accent-cyan" />
@@ -104,23 +157,41 @@ export default function ClassRoutine() {
             ))}
 
             {/* Body rows */}
-            {times.map((time) => (
-              <Fragment key={time}>
+            {timeOrder.map((slotKey) => (
+              <Fragment key={slotKey}>
                 <div className="p-3 text-slate-300 border-t border-white/5 bg-dark/60 sticky left-0 backdrop-blur-sm">
-                  {time}
+                  {data.time_slots[slotKey]}
                 </div>
                 {days.map((day) => {
-                  const course = schedule[day]?.[time] || "—";
-                  return (
-                    <div key={`${day}-${time}`} className="p-3 border-t border-white/5">
-                      {course === "—" ? (
+                  // Break row spans all columns visually
+                  if (slotKey === "break") {
+                    return (
+                      <div key={`${day}-break`} className="p-3 border-t border-white/5">
+                        <div className="text-slate-400 text-sm">Break</div>
+                      </div>
+                    );
+                  }
+
+                  const entries = data.routine?.[day] || [];
+                  const item = entries.find((e) => String(e.slot) === slotKey);
+                  if (!item) {
+                    return (
+                      <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
                         <div className="text-slate-500 text-sm">—</div>
-                      ) : (
-                        <span
-                          className={`inline-flex items-center gap-2 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(
-                            day
-                          )} transition-colors`}
-                        >
+                      </div>
+                    );
+                  }
+
+                  const label = resolveCourseLabel(item.course, data.course_names, data.courses);
+                  const instructorNames = resolveInstructors(item.instructors, data.teachers);
+                  return (
+                    <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
+                      <div
+                        className={`inline-flex flex-col gap-1 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(
+                          day
+                        )} transition-colors`}
+                      >
+                        <div className="flex items-center gap-2">
                           <span
                             className={`inline-block h-2 w-2 rounded-full ${
                               dayAccent[day] === "magenta"
@@ -130,9 +201,27 @@ export default function ClassRoutine() {
                                 : "bg-accent-cyan"
                             }`}
                           />
-                          <span className="text-sm sm:text-base text-slate-200">{course}</span>
-                        </span>
-                      )}
+                          <span className="text-sm sm:text-base text-slate-200 font-medium">
+                            {label}
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-400 flex flex-wrap items-center gap-x-3 gap-y-1">
+                          {instructorNames?.length ? (
+                            <span title="Instructors">{instructorNames.join(", ")}</span>
+                          ) : null}
+                          {item.room ? <span title="Room">Room: {item.room}</span> : null}
+                          {item.section ? <span title="Section">Section: {item.section}</span> : null}
+                          {item.duration ? <span title="Duration">{item.duration}</span> : null}
+                          {item.tag ? (
+                            <span
+                              className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] bg-white/5 text-slate-300"
+                              title="Tag"
+                            >
+                              {item.tag}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
                     </div>
                   );
                 })}

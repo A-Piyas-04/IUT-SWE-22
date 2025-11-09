@@ -1,0 +1,101 @@
+{
+  "institution": {
+    "name": "Islamic University of Technology (IUT)",
+    "organization": "Organisation of Islamic Cooperation (OIC)",
+    "department": "Computer Science and Engineering",
+    "program": "BSc in Software Engineering (SWE)",
+    "semester": "5th Semester",
+    "note": "Not allowed to change without prior permission of the Head, CSE Department."
+  },
+  "teachers": {
+    "AAK": "Ashraful Alam Khan",
+    "ARN": "MD Atiqur Rahman",
+    "ASH": "Asaduzzaman Herok",
+    "HM": "Prof. Dr. Hasan Mahmud",
+    "KH": "Prof. Dr. Md. Kamrul Hasan",
+    "LNL": "Lutfun Nahar Lota",
+    "MMA": "Prof. Dr. Muhammad Mahbub Alam",
+    "NY": "Njayou Youssef",
+    "SB": "SM Sabit Bananee",
+    "SRR": "Syed Rifat Raiyan",
+    "X1": "X1",
+    "X2": "X2",
+    "X3": "X3",
+    "X4": "X4"
+  },
+  "time_slots": {
+    "1": "08:00 - 09:15",
+    "2": "09:15 - 10:30",
+    "3": "10:30 - 11:45",
+    "4": "11:45 - 13:00",
+    "break": "13:00 - 14:30 (Lunch and Prayer Break)",
+    "5": "14:30 - 15:45",
+    "6": "15:45 - 17:00"
+  },
+  "routine": {
+    "Monday": [
+      { "slot": 1, "course": "Math 4544", "instructors": ["SRR", "X1"], "room": "L-4", "section": "B" },
+      { "slot": 2, "course": "SWE 4502", "duration": "100 mins", "instructors": ["LNL", "X4"], "room": "L-5", "section": "B" },
+      { "slot": 3, "course": "Math 4544", "instructors": ["SRR", "X1"], "room": "L-4", "section": "A" },
+      { "slot": 4, "course": "SWE 4504", "instructors": ["ARN", "AAK"], "room": "L-3", "section": "A" }
+    ],
+    "Tuesday": [
+      { "slot": 1, "course": "SWE 4504", "instructors": ["ARN", "AAK"], "room": "L-3", "section": "B" },
+      { "slot": 2, "course": "CSE 4501", "instructors": ["SB"], "room": "R-304" },
+      { "slot": 3, "course": "SWE 4503", "instructors": ["ARN"], "room": "R-304" },
+      { "slot": 4, "course": "CSE 4553", "instructors": ["HM"], "room": "R-304", "tag": "ML" },
+      { "slot": 5, "course": "CSE 4559", "instructors": ["NY"], "room": "R-510", "tag": "CC" },
+      { "slot": 6, "course": "Math 4543", "instructors": ["SRR"], "room": "R-304" }
+    ],
+    "Wednesday": [
+      { "slot": 1, "course": "SWE 4538", "instructors": ["ASH", "X2"], "room": "L-5", "section": "A" },
+      { "slot": 2, "course": "SWE 4538", "instructors": ["ASH", "X2"], "room": "L-5", "section": "B" },
+      { "slot": 3, "course": "SWE 4503", "instructors": ["ARN"], "room": "R-302" },
+      { "slot": 4, "course": "CSE 4553", "instructors": ["HM"], "room": "R-304", "tag": "MLSWE" },
+      { "slot": 5, "course": "SWE 4537", "instructors": ["ASH"], "room": "R-302" },
+      { "slot": 6, "course": "SWE 4501", "instructors": ["LNL"], "room": "R-302" }
+    ],
+    "Thursday": [
+      { "slot": 1, "course": "CSE 4559", "instructors": ["NY"], "room": "L-6", "tag": "CC" },
+      { "slot": 2, "course": "CSE 4501", "instructors": ["SB"], "room": "R-304" },
+      { "slot": 3, "course": "SWE 4537", "instructors": ["ASH"], "room": "R-304" },
+      { "slot": 4, "course": "SWE 4502", "duration": "100 mins", "instructors": ["LNL", "KH"], "room": "L-2", "section": "A" },
+      { "slot": 5, "course": "CSE 4560 / CSE 4750", "instructors": ["NY", "ARN"], "room": "L-5", "tag": "CC" },
+      { "slot": 6, "course": "CSE 4554", "instructors": ["HM", "X2"], "room": "L-5", "tag": "ML" }
+    ],
+    "Friday": [
+      { "slot": 1, "course": "CSE 4502", "duration": "100 mins", "instructors": ["SB", "MMA"], "room": "L-2", "section": "A" },
+      { "slot": 2, "course": "SWE 4501", "instructors": ["LNL"], "room": "R-301" },
+      { "slot": 3, "course": "Math 4543", "instructors": ["SRR"], "room": "R-301" },
+      { "slot": 4, "course": "CSE 4502", "duration": "100 mins", "instructors": ["SB", "X3"], "room": "L-2", "section": "B" }
+    ]
+  },
+  "courses": [
+    { "code": "Math 4543", "title": "Mathematics IV", "instructor": "SRR" },
+    { "code": "Math 4544", "title": "Mathematics V", "instructor": "SRR" },
+    { "code": "SWE 4501", "title": "Software Engineering I", "instructor": "LNL" },
+    { "code": "SWE 4502", "title": "Software Engineering II", "instructor": ["LNL", "KH", "X4"], "duration": "100 mins" },
+    { "code": "SWE 4503", "title": "Software Design", "instructor": "ARN" },
+    { "code": "SWE 4504", "title": "Software Project Management", "instructors": ["ARN", "AAK"] },
+    { "code": "SWE 4537", "title": "Software Testing", "instructor": "ASH" },
+    { "code": "SWE 4538", "title": "Advanced SWE Topics", "instructors": ["ASH", "X2"] },
+    { "code": "CSE 4501", "title": "Database Systems", "instructor": "SB" },
+    { "code": "CSE 4502", "title": "Advanced Database Systems", "instructors": ["SB", "MMA", "X3"], "duration": "100 mins" },
+    { "code": "CSE 4553", "title": "Machine Learning", "instructor": "HM" },
+    { "code": "CSE 4554", "title": "ML Lab", "instructors": ["HM", "X2"] },
+    { "code": "CSE 4559", "title": "Cloud Computing", "instructor": "NY" },
+    { "code": "CSE 4560", "title": "Cloud Computing Lab", "instructors": ["NY", "ARN"] },
+    { "code": "CSE 4750", "title": "Project (Cloud Computing)", "instructors": ["NY", "ARN"] }
+  ],
+  "course_names": {
+    "Math4543": "NumericalMethods",
+    "CSE4501": "OperatingSystems",
+    "SWE4501": "DesignPatterns",
+    "SWE4503": "SoftwareSecurity",
+    "Math4544": "NumericalMethodsLab",
+    "CSE4502": "OperatingSystemsLab",
+    "SWE4502": "DesignPatternsLab",
+    "SWE4504": "SoftwareSecurityLab",
+    "SWE4506": "DesignProjectI"
+  }
+}

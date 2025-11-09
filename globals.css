@@ -1,19 +1,21 @@
 /*
   Global stylesheet for IUT SWE 22
   - Applies base styles
-  - Uses a soothing, professional palette and clean typography
+  - Defines Dark Neon theme utilities
 */
+
+/* Import a clean, modern font for the futuristic aesthetic */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Theme variables (for non-Tailwind contexts if needed) */
 :root {
-  --bg: #F4F6F9;
-  --text: #34495E;
-  --primary: #2C3E50;
-  --accent: #3498DB;
+  /* CSS variables for neon text glow utilities */
+  --neon-cyan: #00f7ff;
+  --neon-magenta: #ff2df1;
+  --neon-lime: #a8ff00;
 }
 
 @layer base {
@@ -24,23 +26,29 @@
 
   body {
     /* Fallbacks complementing Tailwind classes set in the layout */
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    background-color: #0d0221;
+    color: #e2e8f0; /* slate-200 */
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
       Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     text-rendering: optimizeLegibility;
+    line-height: 1.6;
   }
 }
 
-@layer components {
-  /* Minimal reusable button styles for consistency */
-  .btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition;
+@layer utilities {
+  /* Text glow utilities to enhance neon theme */
+  .text-glow-cyan {
+    text-shadow: 0 0 6px rgba(0,247,255,0.35), 0 0 12px rgba(0,247,255,0.25);
   }
-  .btn-primary {
-    @apply bg-accent text-white shadow-soft-lg hover:shadow-soft-hover hover:-translate-y-px;
+  .text-glow-magenta {
+    text-shadow: 0 0 6px rgba(255,45,241,0.35), 0 0 12px rgba(255,45,241,0.25);
   }
-  .btn-outline {
-    @apply border border-accent text-accent bg-transparent hover:-translate-y-px hover:shadow-soft-lg;
+  .text-glow-lime {
+    text-shadow: 0 0 6px rgba(168,255,0,0.35), 0 0 12px rgba(168,255,0,0.25);
+  }
+
+  /* Card utility for consistent sections */
+  .card {
+    @apply bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm;
   }
 }

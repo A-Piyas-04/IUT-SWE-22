@@ -11,17 +11,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        soft: "#F4F6F9", // Background: light gray
-        slate: "#34495E", // Text: dark slate
-        primary: "#2C3E50", // Header: midnight blue
-        accent: "#3498DB", // Accent: peter river blue
-        muted: "#6B7B8C",
-        border: "#E6EDF5",
-        card: "#FFFFFF",
+        dark: "#0d0221", // Deep dark background
+        // Original neon accents retained for occasional highlights
+        "neon-cyan": "#00f7ff",
+        "neon-magenta": "#ff2df1",
+        "neon-lime": "#a8ff00",
+        // Softer accent tones for more comfortable UI
+        "accent-cyan": "#67e8f9", // cyan-300
+        "accent-magenta": "#f472b6", // pink-400
+        "accent-lime": "#a3e635", // lime-500
+        surface: "#140a33", // elevated card surfaces
       },
       fontFamily: {
         sans: [
-          "Montserrat",
+          "Space Grotesk",
           "Inter",
           "ui-sans-serif",
           "system-ui",
@@ -35,8 +38,17 @@ module.exports = {
         ],
       },
       boxShadow: {
-        "soft-lg": "0 8px 24px rgba(18, 38, 63, 0.06)",
-        "soft-hover": "0 12px 28px rgba(18, 38, 63, 0.10)",
+        // Softer glow shadows
+        "neon-cyan": "0 0 8px rgba(0,247,255,0.35), 0 0 16px rgba(0,247,255,0.25)",
+        "neon-magenta": "0 0 8px rgba(255,45,241,0.35), 0 0 16px rgba(255,45,241,0.25)",
+        "neon-lime": "0 0 8px rgba(168,255,0,0.35), 0 0 16px rgba(168,255,0,0.25)",
+        card: "0 6px 24px rgba(0,0,0,0.35)",
+      },
+      borderColor: {
+        "neon-cyan": "#00f7ff",
+        "neon-magenta": "#ff2df1",
+        "neon-lime": "#a8ff00",
+        surface: "#ffffff0f",
       },
     },
   },

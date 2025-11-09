@@ -11,14 +11,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        dark: "#0d0221", // Deep dark background
-        "neon-cyan": "#00f7ff",
-        "neon-magenta": "#ff2df1",
-        "neon-lime": "#a8ff00",
+        soft: "#F4F6F9", // Background: light gray
+        slate: "#34495E", // Text: dark slate
+        primary: "#2C3E50", // Header: midnight blue
+        accent: "#3498DB", // Accent: peter river blue
+        muted: "#6B7B8C",
+        border: "#E6EDF5",
+        card: "#FFFFFF",
       },
       fontFamily: {
         sans: [
-          "Space Grotesk",
+          "Montserrat",
           "Inter",
           "ui-sans-serif",
           "system-ui",
@@ -32,15 +35,8 @@ module.exports = {
         ],
       },
       boxShadow: {
-        // Neon glow shadows for UI elements
-        "neon-cyan": "0 0 10px rgba(0,247,255,0.6), 0 0 20px rgba(0,247,255,0.4)",
-        "neon-magenta": "0 0 10px rgba(255,45,241,0.6), 0 0 20px rgba(255,45,241,0.4)",
-        "neon-lime": "0 0 10px rgba(168,255,0,0.6), 0 0 20px rgba(168,255,0,0.4)",
-      },
-      borderColor: {
-        "neon-cyan": "#00f7ff",
-        "neon-magenta": "#ff2df1",
-        "neon-lime": "#a8ff00",
+        "soft-lg": "0 8px 24px rgba(18, 38, 63, 0.06)",
+        "soft-hover": "0 12px 28px rgba(18, 38, 63, 0.10)",
       },
     },
   },

@@ -1,6 +1,6 @@
 /**
  * ClassRoutine component
- * Renders a neon-styled weekly schedule grid with placeholder data.
+ * Weekly schedule grid with a clean, professional palette.
  */
 import { Fragment } from "react";
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -35,24 +35,8 @@ const schedule = {
   },
 };
 
-// Map each day to a neon accent for variety
-const dayAccent = {
-  Monday: "cyan",
-  Tuesday: "magenta",
-  Wednesday: "lime",
-  Thursday: "cyan",
-  Friday: "magenta",
-};
-
-function cellAccentClasses(day) {
-  switch (dayAccent[day]) {
-    case "magenta":
-      return "border-neon-magenta/50 shadow-neon-magenta text-neon-magenta";
-    case "lime":
-      return "border-neon-lime/50 shadow-neon-lime text-neon-lime";
-    default:
-      return "border-neon-cyan/50 shadow-neon-cyan text-neon-cyan";
-  }
+function cellClasses() {
+  return "border-border bg-card text-slate";
 }
 
 export default function ClassRoutine() {
@@ -60,22 +44,22 @@ export default function ClassRoutine() {
     <section aria-labelledby="routine-title" className="space-y-4">
       <h2
         id="routine-title"
-        className="text-2xl font-semibold text-neon-cyan text-glow-cyan"
+        className="text-2xl font-semibold text-primary"
       >
         Weekly Class Routine
       </h2>
 
       {/* Grid container: 1 time column + 5 day columns */}
       <div className="w-full overflow-x-auto">
-        <div className="grid grid-cols-[120px_repeat(5,_1fr)] border border-neon-cyan/30 rounded-lg shadow-neon-cyan bg-dark/40">
+        <div className="grid grid-cols-[120px_repeat(5,_1fr)] border border-border rounded-lg bg-card shadow-soft-lg">
           {/* Header row */}
-          <div className="p-3 font-bold border-b border-neon-cyan/40 text-neon-cyan text-glow-cyan">
+          <div className="p-3 font-bold border-b border-border bg-primary text-white">
             Time
           </div>
           {days.map((day) => (
             <div
               key={`hdr-${day}`}
-              className={`p-3 font-bold border-b ${cellAccentClasses(day)} text-glow-cyan`}
+              className={`p-3 font-bold border-b border-border bg-primary/90 text-white`}
             >
               {day}
             </div>
@@ -84,7 +68,7 @@ export default function ClassRoutine() {
           {/* Body rows */}
           {times.map((time) => (
             <Fragment key={time}>
-              <div className="p-3 border-t border-neon-cyan/20 text-neon-cyan">
+              <div className="p-3 border-t border-border text-slate bg-card">
                 {time}
               </div>
               {days.map((day) => {
@@ -92,7 +76,7 @@ export default function ClassRoutine() {
                 return (
                   <div
                     key={`${day}-${time}`}
-                    className={`p-3 border-t ${cellAccentClasses(day)} bg-dark/30`}
+                    className={`p-3 border-t border-border ${cellClasses()}`}
                   >
                     <span className="text-sm sm:text-base">{course}</span>
                   </div>

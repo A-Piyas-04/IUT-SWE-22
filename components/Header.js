@@ -1,44 +1,32 @@
 /**
  * Responsive Header component with project title and navigation menu.
- * Styled using the Dark Neon theme.
+ * Styled using a professional, soothing palette.
  */
 import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-sm border-b border-neon-magenta/40 shadow-neon-magenta bg-dark/60">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="group">
-          <span className="text-xl sm:text-2xl font-semibold text-neon-cyan text-glow-cyan">
-            IUT SWE 22
+    <header className="sticky top-0 z-30 bg-primary text-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <Link href="/" className="inline-flex items-center gap-3">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/10 border border-white/20 text-sm font-bold">
+            IUT
           </span>
-          <span className="block h-[2px] w-0 group-hover:w-full transition-all duration-300 bg-neon-cyan/60 shadow-neon-cyan" />
+          <span className="text-xl sm:text-2xl font-semibold tracking-tight">SWE 22</span>
         </Link>
-        <nav>
+        <nav aria-label="Primary">
           <ul className="flex items-center gap-6">
             <li>
-              <Link
-                href="/"
-                className="text-neon-cyan hover:text-neon-lime transition-colors text-glow-cyan hover:shadow-neon-lime"
-              >
-                Home
-              </Link>
+              <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             </li>
             <li>
-              <Link
-                href="#"
-                className="text-neon-magenta hover:text-neon-lime transition-colors text-glow-magenta hover:shadow-neon-lime"
-              >
-                Assignments
-              </Link>
+              <Link href="#" className="hover:text-accent transition-colors">About</Link>
             </li>
             <li>
-              <Link
-                href="#"
-                className="text-neon-lime hover:text-neon-cyan transition-colors text-glow-lime hover:shadow-neon-cyan"
-              >
-                Resources
-              </Link>
+              <Link href="#" className="hover:text-accent transition-colors">Services</Link>
+            </li>
+            <li>
+              <Link href="#" className="hover:text-accent transition-colors">Contact</Link>
             </li>
           </ul>
         </nav>

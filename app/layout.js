@@ -6,23 +6,23 @@
  */
 import "../globals.css";
 import Header from "../components/Header";
-import { Space_Grotesk } from "next/font/google";
+import Footer from "../components/Footer";
+import { Montserrat } from "next/font/google";
 
 export const metadata = {
   title: "IUT SWE 22",
-  description: "IUT SWE 22 — Dark Neon themed Next.js application",
+  description: "IUT SWE 22 — Modern, soothing UI with professional styling",
 };
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], display: "swap" });
+const montserrat = Montserrat({ subsets: ["latin"], display: "swap" });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${spaceGrotesk.className} bg-dark min-h-screen text-neon-cyan antialiased`}
-      >
+      <body className={`${montserrat.className} bg-soft min-h-screen text-slate antialiased`}>
         <Header />
-        <main className="container mx-auto px-4 py-8">{children}</main>
+        <main className="max-w-7xl mx-auto px-4 py-10">{children}</main>
+        <Footer />
       </body>
     </html>
   );

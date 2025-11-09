@@ -1,0 +1,48 @@
+/*
+  Global stylesheet for IUT SWE 22
+  - Applies base styles
+  - Defines Dark Neon theme utilities
+*/
+
+/* Import a clean, modern font for the futuristic aesthetic */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* CSS variables for neon text glow utilities */
+  --neon-cyan: #00f7ff;
+  --neon-magenta: #ff2df1;
+  --neon-lime: #a8ff00;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    /* Fallbacks complementing Tailwind classes set in the layout */
+    background-color: #0d0221;
+    color: #d7fbff;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  /* Text glow utilities to enhance neon theme */
+  .text-glow-cyan {
+    text-shadow: 0 0 8px var(--neon-cyan), 0 0 14px var(--neon-cyan);
+  }
+  .text-glow-magenta {
+    text-shadow: 0 0 8px var(--neon-magenta), 0 0 14px var(--neon-magenta);
+  }
+  .text-glow-lime {
+    text-shadow: 0 0 8px var(--neon-lime), 0 0 14px var(--neon-lime);
+  }
+}

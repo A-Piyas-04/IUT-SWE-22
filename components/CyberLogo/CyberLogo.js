@@ -59,21 +59,33 @@ export default function CyberLogo() {
           ["--glitch-duration"]: `${glitchDurationMs}ms`,
         }}
       >
+        <defs>
+          {/* <!-- Cyan neon glow filter --> */}
+          <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur" />
+            <feColorMatrix in="blur" type="matrix"
+              values="0 0 0 0 0   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" result="cyan" />
+            <feMerge>
+              <feMergeNode in="cyan" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         {/* Clean vector-only text without borders or dots */}
 
         {/* Logo text */}
-        {/* Base cyan layer (always visible) */}
-        <g>
+        {/* Base cyan layer (always visible, with neon glow) */}
+        <g filter="url(#neonGlow)">
           <text x="12" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#00FFFF">IUT</text>
           <text x="116" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#00FFFF">SWE</text>
-          <text x="232" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#00FFFF">22</text>
+          <text x="232" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#00FFFF">'22</text>
         </g>
 
-        {/* Purple overlay layer (only animates during glitch) */}
+        {/* Pinkish purple overlay layer (only animates during glitch) */}
         <g className={styles.glitchPurple} aria-hidden="true">
-          <text x="12" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#8B5CF6">IUT</text>
-          <text x="116" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#8B5CF6">SWE</text>
-          <text x="232" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#8B5CF6">22</text>
+          <text x="12" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#FF3EF2">IUT</text>
+          <text x="116" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#FF3EF2">SWE</text>
+          <text x="232" y="58" fontFamily="'Audiowide', sans-serif" fontWeight="400" fontSize="44" fill="#FF3EF2">'22</text>
         </g>
       </svg>
     </Link>

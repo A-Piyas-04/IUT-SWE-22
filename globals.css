@@ -49,12 +49,13 @@
     text-shadow: 0 0 6px rgba(168,255,0,0.35), 0 0 12px rgba(168,255,0,0.25);
   }
 
-  /* Page transitions: subtle fade/translate for 350ms */
+  /* Page transitions: slower and more pronounced for smoothness */
   .page-transition {
     will-change: opacity, transform;
-    transition: opacity 350ms ease, transform 350ms ease;
+    transition: opacity 900ms ease-in-out,
+      transform 900ms ease-in-out;
   }
-  .page-transition.pt-pre { opacity: 0; transform: translateY(6px); }
+  .page-transition.pt-pre { opacity: 0; transform: translateY(14px); }
   .page-transition.pt-enter { opacity: 1; transform: translateY(0); }
 
   @media (prefers-reduced-motion: reduce) {

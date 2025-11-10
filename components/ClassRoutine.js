@@ -338,9 +338,9 @@ export default function ClassRoutine() {
             style={{
               gridTemplateColumns: `120px repeat(${timeOrder.length}, minmax(160px, 1fr))`,
               gridTemplateRows: `auto repeat(${days.length}, var(--slotHActual))`,
-              // Base slot height and the 20% increased actual height
+              // Base slot height and 10% decrease from current 1.2x => 1.08x
               "--slotH": "clamp(72px, 10vw, 116px)",
-              "--slotHActual": "calc(var(--slotH) * 1.2)",
+              "--slotHActual": "calc(var(--slotH) * 1.08)",
             }}
           >
             {/* Header row */}
@@ -426,8 +426,8 @@ export default function ClassRoutine() {
                         <div
                           className={`flex flex-col h-full overflow-hidden gap-2 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}
                           style={{
-                            // Proportional scaling of internal elements by 20%
-                            "--scale": 1.2,
+                            // Proportional scaling of internal elements by 8% (to match 1.08x row height)
+                            "--scale": 1.08,
                             transform: "scale(var(--scale))",
                             transformOrigin: "top left",
                             // Ensure scaled content fits within the cell bounds horizontally

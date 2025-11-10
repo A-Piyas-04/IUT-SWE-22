@@ -5,6 +5,10 @@
  */
 "use client";
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { Orbitron } from "next/font/google";
+
+// Next.js font loaders must be initialized at module scope
+const orbitron = Orbitron({ subsets: ["latin"], weight: "700", display: "swap" });
 // Days will be derived from JSON so all available days are shown
 
 // Map each day to a softer accent color for variety
@@ -42,6 +46,7 @@ export default function ClassRoutine() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [group, setGroup] = useState("A");
 
   useEffect(() => {
     let active = true;
@@ -61,6 +66,16 @@ export default function ClassRoutine() {
       active = false;
     };
   }, []);
+
+  // Persist group selection within the session
+  useEffect(() => {
+    const saved = sessionStorage.getItem("routine_group");
+    if (saved === "A" || saved === "B") setGroup(saved);
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("routine_group", group);
+  }, [group]);
 
   const timeOrder = useMemo(() => {
     if (!data) return [];
@@ -117,6 +132,21 @@ export default function ClassRoutine() {
     return ids.map((id) => teachersMap?.[id] || id);
   }
 
+  // Detect lab courses robustly using course name/title and room pattern
+  function isLabCourse(courseRaw, room, courseNamesMap, coursesList) {
+    if (!courseRaw) return false;
+    const nameOnly = resolveCourseNameOnly(courseRaw, courseNamesMap, coursesList) || "";
+    const titleHasLab = /\bLab\b/i.test(nameOnly);
+    const roomLooksLab = typeof room === "string" && /^L-\d+/i.test(room);
+    const parts = courseRaw.split("/").map((p) => p.trim());
+    const byCourses = parts.some((p) => {
+      const norm = normalizeCode(p);
+      const found = coursesList?.find((c) => c.code === p || normalizeCode(c.code) === norm);
+      return /\bLab\b/i.test(found?.title || "");
+    });
+    return titleHasLab || roomLooksLab || byCourses;
+  }
+
   if (loading) {
     return (
       <section aria-labelledby="routine-title" className="space-y-4">
@@ -156,13 +186,60 @@ export default function ClassRoutine() {
               <p className="text-sm text-slate-400">Organized schedule with accessible, calm neon accents.</p>
             )}
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400">
-            <span className="inline-block h-2 w-2 rounded-full bg-accent-cyan" />
-            <span>Cyan</span>
-            <span className="inline-block h-2 w-2 rounded-full bg-accent-magenta ml-3" />
-            <span>Magenta</span>
-            <span className="inline-block h-2 w-2 rounded-full bg-accent-lime ml-3" />
-            <span>Lime</span>
+          <div className="flex items-center gap-6">
+
+            {/* Group toggle */}
+            <div className="inline-flex rounded-lg ring-1 ring-white/10 overflow-hidden">
+              {/* Group A */}
+              <button
+                type="button"
+                className={`group inline-flex items-center justify-center gap-3 min-w-[120px] min-h-[60px] sm:min-w-[140px] sm:min-h-[64px] xl:min-w-[160px] xl:min-h-[72px] px-6 py-3.5 sm:px-7 sm:py-4 xl:px-8 xl:py-4 text-[1.15rem] sm:text-[1.3rem] xl:text-[1.35rem] font-bold ${orbitron.className} rounded-none transition-all duration-300 ease-in-out will-change-transform
+                  ${group === "A"
+                    ? "bg-accent-cyan/25 text-slate-100 ring-1 ring-accent-cyan/60 shadow-lg shadow-accent-cyan/25"
+                    : "bg-dark/50 text-slate-300 hover:bg-dark/60"}
+                  hover:scale-[1.05]
+                  hover:shadow-md hover:shadow-black/40
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:ring-accent-cyan`}
+                onClick={() => setGroup("A")}
+                aria-pressed={group === "A"}
+                aria-label="Show Group A"
+                title="Show Group A"
+              >
+                {/* Inline icon */}
+                <svg aria-hidden="true" className={`h-5 w-5 sm:h-6 sm:w-6 ${group === "A" ? "text-accent-cyan" : "text-slate-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 21v-2a4 4 0 00-8 0v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span>Group A</span>
+              </button>
+              {/* Divider */}
+              <div className="w-px bg-white/10" aria-hidden="true" />
+
+              {/* Group B */}
+              <button
+                type="button"
+                className={`group inline-flex items-center justify-center gap-3 min-w-[120px] min-h-[60px] sm:min-w-[140px] sm:min-h-[64px] xl:min-w-[160px] xl:min-h-[72px] px-6 py-3.5 sm:px-7 sm:py-4 xl:px-8 xl:py-4 text-[1.15rem] sm:text-[1.3rem] xl:text-[1.35rem] font-bold ${orbitron.className} rounded-none transition-all duration-300 ease-in-out will-change-transform
+                  ${group === "B"
+                    ? "bg-accent-magenta/25 text-slate-100 ring-1 ring-accent-magenta/60 shadow-lg shadow-accent-magenta/25"
+                    : "bg-dark/50 text-slate-300 hover:bg-dark/60"}
+                  hover:scale-[1.05]
+                  hover:shadow-md hover:shadow-black/40
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:ring-accent-magenta`}
+                onClick={() => setGroup("B")}
+                aria-pressed={group === "B"}
+                aria-label="Show Group B"
+                title="Show Group B"
+              >
+                {/* Inline icon */}
+                <svg aria-hidden="true" className={`h-5 w-5 sm:h-6 sm:w-6 ${group === "B" ? "text-accent-magenta" : "text-slate-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 00-8 0v2" />
+                  <circle cx="16" cy="7" r="4" />
+                  <path d="M8 21v-2a4 4 0 00-8 0v2" />
+                  <circle cx="4" cy="7" r="4" />
+                </svg>
+                <span>Group B</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -221,7 +298,16 @@ export default function ClassRoutine() {
                       continue;
                     }
 
-                    const starting = entries.filter((e) => e.start === slotKey);
+                    const starting = entries
+                      .filter((e) => e.start === slotKey)
+                      .filter((e) => {
+                        // ML/CC slots are unaffected by group toggle
+                        if (e.tag === "ML" || e.tag === "CC") return true;
+                        // For lab/grouped entries with section, only show selected group
+                        if (e.section === "A" || e.section === "B") return e.section === group;
+                        // Non-grouped entries remain visible
+                        return true;
+                      });
                     const spanLen = starting.reduce((max, e) => {
                       const sidx = timeOrder.indexOf(e.start);
                       const eidx = timeOrder.indexOf(e.end);
@@ -258,11 +344,19 @@ export default function ClassRoutine() {
                             const roomClass = isMLCCCombined
                               ? "text-[0.7rem] sm:text-[0.75rem] text-accent-cyan font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
                               : "text-sm sm:text-base text-accent-cyan font-semibold";
+                            const isLab = isLabCourse(item.course, item.room, data.course_names, data.courses);
+                            const showBiWeekly = isLab && item.tag !== "ML" && item.tag !== "CC";
+                            const labelClass = isMLCCCombined
+                              ? "mt-1 inline-flex self-start px-2 py-0.5 rounded-md bg-accent-lime/15 text-accent-lime ring-1 ring-accent-lime/40 text-[0.7rem] sm:text-[0.75rem] font-semibold"
+                              : "mt-1 inline-flex self-start px-2 py-0.5 rounded-md bg-accent-lime/15 text-accent-lime ring-1 ring-accent-lime/40 text-xs sm:text-sm font-semibold";
                             return (
                               <div key={`${day}-${slotKey}-item-${idx}`} className="flex flex-col">
                                 <span className={nameClass} title={courseName}>{courseName}</span>
                                 {item.room ? (
                                   <span className={roomClass} title={`Room: ${item.room}`}>Room: {item.room}</span>
+                                ) : null}
+                                {showBiWeekly ? (
+                                  <span className={labelClass} aria-label="Bi-Weekly lab" title="Bi-Weekly">Bi-Weekly</span>
                                 ) : null}
                               </div>
                             );

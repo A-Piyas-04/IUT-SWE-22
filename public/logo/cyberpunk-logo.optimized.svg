@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" aria-label="IUT SWE 22 logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00f7ff" />
+      <stop offset="0.5" stop-color="#ff2df1" />
+      <stop offset="1" stop-color="#a8ff00" />
+    </linearGradient>
+  </defs>
+  <path d="M10 60 H270" stroke="url(#g)" stroke-width="2" stroke-linecap="round" opacity="0.45" />
+  <circle cx="40" cy="60" r="3" fill="#00f7ff" opacity="0.6" />
+  <circle cx="120" cy="60" r="3" fill="#ff2df1" opacity="0.6" />
+  <circle cx="200" cy="60" r="3" fill="#a8ff00" opacity="0.6" />
+  <text x="10" y="40" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="28" fill="url(#g)">IUT</text>
+  <text x="90" y="40" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="28" fill="url(#g)">SWE</text>
+  <text x="190" y="40" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="28" fill="url(#g)">22</text>
+</svg>

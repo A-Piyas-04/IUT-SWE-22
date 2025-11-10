@@ -6,7 +6,7 @@
  */
 import "../globals.css";
 import Header from "../components/Header";
-import PageTransition from "../components/PageTransition";
+import RouteTransition from "../components/RouteTransition";
 import Footer from "../components/Footer";
 import { Space_Grotesk } from "next/font/google";
 
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         <main className="container mx-auto px-4 py-10">
-          <PageTransition>{children}</PageTransition>
+          <RouteTransition>{children}</RouteTransition>
         </main>
         <Footer />
       </body>

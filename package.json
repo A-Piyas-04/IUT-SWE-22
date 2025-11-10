@@ -13,16 +13,17 @@
     "test:nav": "node lib/nav.test.js"
   },
   "dependencies": {
+    "framer-motion": "^12.23.24",
+    "mongodb": "^6.6.2",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "mongodb": "^6.6.2"
+    "react-dom": "latest"
   },
   "devDependencies": {
-    "tailwindcss": "3.4.13",
-    "postcss": "latest",
     "autoprefixer": "latest",
     "eslint": "latest",
-    "eslint-config-next": "latest"
+    "eslint-config-next": "latest",
+    "postcss": "latest",
+    "tailwindcss": "3.4.13"
   }
 }

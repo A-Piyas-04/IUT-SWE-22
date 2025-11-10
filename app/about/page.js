@@ -29,11 +29,10 @@ export default function AboutPage() {
       {/* Social links */}
       <div aria-label="Social links" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
         {[
-          { label: "Facebook", href: "https://facebook.com", color: "text-accent-cyan" },
-          { label: "LinkedIn", href: "https://linkedin.com", color: "text-accent-magenta" },
-          { label: "Email", href: "mailto:example@example.com", color: "text-accent-lime" },
-          { label: "GitHub", href: "https://github.com", color: "text-accent-cyan" },
-          { label: "Website", href: "https://example.com", color: "text-accent-magenta" },
+          { label: "Facebook", href: "https://https://www.facebook.com/ahnafshahriar.pias/", color: "text-accent-cyan" },
+          { label: "LinkedIn", href: "https://linkedin.com/in/ah-pias", color: "text-accent-magenta" },
+          { label: "Email", href: "ahnafpias@iut-dhaka.edu", color: "text-accent-lime" },
+          { label: "GitHub", href: "https://github.com/A-Piyas-04", color: "text-accent-cyan" },
         ].map((item) => (
           <a
             key={item.label}

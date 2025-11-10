@@ -2,8 +2,8 @@
  * Responsive Header component with project title and navigation menu.
  * Styled using the Dark Neon theme.
  */
-import Link from "next/link";
 import Navbar from "./Navbar/Navbar";
+import CyberLogo from "./CyberLogo/CyberLogo";
 
 export default function Header() {
   return (
@@ -12,17 +12,22 @@ export default function Header() {
       aria-label="Site header"
     >
       <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-        <Link href="/" className="group inline-flex items-center gap-2">
-          <span className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-lime bg-clip-text text-transparent">
-            IUT SWE 22
-          </span>
-          <span className="block h-[2px] w-0 group-hover:w-full transition-all duration-300 bg-accent-cyan/60" />
-        </Link>
-        </div>
-        {/* New modular navbar */}
-        <div className="mt-3">
-          <Navbar />
+        {/* Left: Cyberpunk logo | Middle: Navbar | Right: reserved */}
+        <div className="flex items-center gap-8">
+          {/* Left corner logo */}
+          <div className="shrink-0">
+            <CyberLogo />
+          </div>
+
+          {/* Middle navbar (flex-grow, centered) */}
+          <div className="flex-1 flex justify-center">
+            <Navbar />
+          </div>
+
+          {/* Right corner reserved space */}
+          <div className="shrink-0" aria-hidden="true">
+            <div className="w-20 h-10" />
+          </div>
         </div>
       </div>
     </header>

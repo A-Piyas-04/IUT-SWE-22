@@ -16,6 +16,8 @@
   --neon-cyan: #00f7ff;
   --neon-magenta: #ff2df1;
   --neon-lime: #a8ff00;
+  /* Configurable routine scroll height with sensible default */
+  --routine-scroll-height: 700px;
 }
 
 @layer base {

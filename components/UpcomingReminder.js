@@ -5,6 +5,8 @@ import {
   getDhakaNowParts,
   findNextClass,
   resolveCourseNameOnly,
+  isLabCourse,
+  findGroupLabPair,
 } from "../lib/schedule";
 
 export default function UpcomingReminder() {
@@ -69,6 +71,24 @@ export default function UpcomingReminder() {
     const item = next.item;
     const name = resolveCourseNameOnly(item.course, routine.course_names, routine.courses);
     const room = item.room || "TBA";
+    // If upcoming is a bi-weekly lab and differs for A/B, show both
+    const startKey = item.start || (Array.isArray(item.slot_range) ? String(item.slot_range[0]) : item.slot != null ? String(item.slot) : null);
+    const isLab = isLabCourse(item.course, item.room, routine.course_names, routine.courses);
+    const pair = startKey && isLab ? findGroupLabPair(routine, next.day, startKey) : null;
+
+    if (pair && (pair.A || pair.B) && (pair.A && pair.B)) {
+      const nameA = resolveCourseNameOnly(pair.A.course, routine.course_names, routine.courses);
+      const nameB = resolveCourseNameOnly(pair.B.course, routine.course_names, routine.courses);
+      const roomA = pair.A.room || "TBA";
+      const roomB = pair.B.room || "TBA";
+      return {
+        heading: `Bi-Weekly Lab — ${next.day}`,
+        sub: "Group-specific labs",
+        room: "",
+        ab: { A: { name: nameA, room: roomA }, B: { name: nameB, room: roomB } },
+      };
+    }
+
     return { heading: `${name}`, sub: `${next.day}`, room };
   })();
 
@@ -86,21 +106,44 @@ export default function UpcomingReminder() {
         </span>
       </div>
       <div className="mt-3 sm:mt-4">
-        <div className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
-          {content.heading}
+        <div className="flex items-center gap-3">
+          <div className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
+            {content.heading}
+          </div>
+          {content.ab && (
+            <span className="inline-flex items-center rounded-full bg-blue-100/80 dark:bg-blue-900/40 text-blue-900 dark:text-blue-200 text-xs sm:text-sm font-semibold px-2.5 py-0.5 ring-1 ring-blue-300/60">
+              Bi-Weekly
+            </span>
+          )}
         </div>
         {content.sub && (
           <div className="mt-0.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
             {content.sub}
           </div>
         )}
-        {content.room && (
-          <div className="mt-2 inline-flex items-center gap-2 rounded-md bg-white/70 dark:bg-slate-700/50 px-3 py-1.5 ring-1 ring-blue-300/50">
-            <span className="text-xs font-medium uppercase tracking-wide text-slate-700 dark:text-slate-200">
-              Room
-            </span>
-            <span className="text-sm font-semibold text-blue-800 dark:text-blue-200">{content.room}</span>
+
+        {content.ab ? (
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="inline-flex items-center justify-between rounded-md bg-white/70 dark:bg-slate-700/50 px-3 py-1.5 ring-1 ring-blue-300/50">
+              <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">A</span>
+              <span className="ml-2 flex-1 truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{content.ab.A.name}</span>
+              <span className="ml-2 text-sm font-semibold text-blue-800 dark:text-blue-200">{content.ab.A.room}</span>
+            </div>
+            <div className="inline-flex items-center justify-between rounded-md bg-white/70 dark:bg-slate-700/50 px-3 py-1.5 ring-1 ring-blue-300/50">
+              <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">B</span>
+              <span className="ml-2 flex-1 truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{content.ab.B.name}</span>
+              <span className="ml-2 text-sm font-semibold text-blue-800 dark:text-blue-200">{content.ab.B.room}</span>
+            </div>
           </div>
+        ) : (
+          content.room && (
+            <div className="mt-2 inline-flex items-center gap-2 rounded-md bg-white/70 dark:bg-slate-700/50 px-3 py-1.5 ring-1 ring-blue-300/50">
+              <span className="text-xs font-medium uppercase tracking-wide text-slate-700 dark:text-slate-200">
+                Room
+              </span>
+              <span className="text-sm font-semibold text-blue-800 dark:text-blue-200">{content.room}</span>
+            </div>
+          )
         )}
       </div>
     </section>

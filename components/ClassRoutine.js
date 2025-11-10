@@ -4,7 +4,7 @@
  * Reads dynamic routine data from /data/routine.json in public.
  */
 "use client";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Orbitron } from "next/font/google";
 
 // Next.js font loaders must be initialized at module scope
@@ -47,6 +47,31 @@ export default function ClassRoutine() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [group, setGroup] = useState("A");
+  const [rotation, setRotation] = useState(0); // 0 or 90
+  const [animating, setAnimating] = useState(false);
+
+  // Measure routine card to compute safe space when rotated
+  const rotatorRef = useRef(null);
+  const cardRef = useRef(null);
+  const [cardSize, setCardSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    if (!cardRef.current || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const cr = entry.contentRect;
+        setCardSize({ width: Math.ceil(cr.width), height: Math.ceil(cr.height) });
+      }
+    });
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Compute wrapper minHeight and translate to prevent visual overlap when rotated
+  const wrapperMinHeight = rotation === 90 ? (cardSize.width || undefined) : undefined;
+  const translationY = rotation === 90 ? Math.max(0, Math.floor((cardSize.width - cardSize.height) / 2)) : 0;
+  const rotatorStyle = rotation === 90
+    ? { transform: `translateY(${translationY}px) rotate(90deg)`, transformBox: "view-box" }
+    : { transform: "rotate(0deg)", transformBox: "view-box" };
 
   useEffect(() => {
     let active = true;
@@ -71,11 +96,18 @@ export default function ClassRoutine() {
   useEffect(() => {
     const saved = sessionStorage.getItem("routine_group");
     if (saved === "A" || saved === "B") setGroup(saved);
+    const rotSaved = localStorage.getItem("routine_rotation");
+    if (rotSaved === "90") setRotation(90);
   }, []);
 
   useEffect(() => {
     sessionStorage.setItem("routine_group", group);
   }, [group]);
+
+  // Persist rotation
+  useEffect(() => {
+    localStorage.setItem("routine_rotation", String(rotation));
+  }, [rotation]);
 
   const timeOrder = useMemo(() => {
     if (!data) return [];
@@ -172,7 +204,16 @@ export default function ClassRoutine() {
 
   return (
     <section aria-labelledby="routine-title" className="space-y-4">
-      <div className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm">
+      {/* Rotation overlay for subtle feedback during animation */}
+      <div
+        aria-hidden={true}
+        className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ease-in-out ${animating ? "opacity-20 bg-black" : "opacity-0"}`}
+      />
+
+      {/* Rotating container wraps entire routine card */}
+      <div className="relative w-full overflow-auto" style={{ minHeight: wrapperMinHeight }}>
+        <div ref={rotatorRef} className="inline-block transition-transform duration-300 ease-in-out" style={rotatorStyle}>
+      <div ref={cardRef} className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm">
         <div className="flex items-end justify-between p-4 sm:p-6 border-b border-white/10">
           <div>
             <h2 id="routine-title" className="text-xl sm:text-2xl font-semibold text-slate-100">
@@ -185,8 +226,45 @@ export default function ClassRoutine() {
             ) : (
               <p className="text-sm text-slate-400">Organized schedule with accessible, calm neon accents.</p>
             )}
+            {/* ARIA live region for rotation announcements */}
+            <p role="status" aria-live="polite" className="sr-only">
+              {rotation === 90 ? "Routine rotated ninety degrees clockwise." : "Routine reset to default orientation."}
+            </p>
           </div>
           <div className="flex items-center gap-6">
+
+            {/* Rotation toggle */}
+            <div className="inline-flex rounded-lg ring-1 ring-white/10 overflow-hidden">
+              <button
+                type="button"
+                className={`group inline-flex items-center justify-center gap-2 min-w-[120px] min-h-[48px] px-4 py-2 text-base font-semibold ${orbitron.className} rounded-none transition-all duration-300 ease-in-out will-change-transform
+                  ${rotation === 90
+                    ? "bg-accent-lime/25 text-slate-100 ring-1 ring-accent-lime/60 shadow-lg shadow-accent-lime/25"
+                    : "bg-dark/50 text-slate-300 hover:bg-dark/60"}
+                  hover:scale-[1.03]
+                  hover:shadow-md hover:shadow-black/40
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:ring-accent-lime`}
+                onClick={() => {
+                  setAnimating(true);
+                  setRotation((r) => (r === 90 ? 0 : 90));
+                  setTimeout(() => setAnimating(false), 300);
+                }}
+                aria-pressed={rotation === 90}
+                aria-label={rotation === 90 ? "Reset rotation" : "Rotate routine 90 degrees"}
+                title={rotation === 90 ? "Reset rotation" : "Rotate 90°"}
+              >
+                {/* Rotation icon */}
+                <svg
+                  aria-hidden="true"
+                  className={`h-5 w-5 transition-transform duration-300 ease-in-out ${rotation === 90 ? "rotate-90 text-accent-lime" : "rotate-0 text-slate-400"}`}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M16 3h5v5" />
+                  <path d="M20 8A8 8 0 104 12" />
+                </svg>
+                <span>{rotation === 90 ? "Reset" : "Rotate"}</span>
+              </button>
+            </div>
 
             {/* Group toggle */}
             <div className="inline-flex rounded-lg ring-1 ring-white/10 overflow-hidden">
@@ -244,7 +322,14 @@ export default function ClassRoutine() {
         </div>
 
         {/* Grid container: 1 day column (left) + time range columns (top) */}
-        <div className="w-full overflow-x-auto">
+        <div
+          className="w-full overflow-auto"
+          style={{
+            /* Reserve a configurable height, but cap to viewport for responsiveness */
+            height: "min(var(--routine-scroll-height), 80vh)",
+            scrollBehavior: "smooth",
+          }}
+        >
           <div
             className="grid"
             style={{
@@ -252,7 +337,7 @@ export default function ClassRoutine() {
               gridTemplateRows: `auto repeat(${days.length}, var(--slotH))`,
               // Responsive, equal-height slots that adapt to viewport
               // without overlapping or mismatched dimensions
-              ['--slotH']: 'clamp(72px, 10vw, 116px)'
+              "--slotH": "clamp(72px, 10vw, 116px)"
             }}
           >
             {/* Header row */}
@@ -374,7 +459,12 @@ export default function ClassRoutine() {
             ))}
           </div>
         </div>
+        {/* Close routine card container */}
+        </div>
+        {/* End rotating inner container */}
       </div>
+      {/* End rotating outer wrapper */}
+    </div>
     </section>
   );
-}
+  }

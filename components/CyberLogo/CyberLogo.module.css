@@ -2,42 +2,54 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
-  border-radius: 0.75rem;
-  background: rgba(13,2,33,0.35);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+  padding: 0; /* Remove any covering/border box */
+  border: none;
+  background: transparent;
+  transition: transform 200ms ease;
   will-change: transform;
 }
-.logoWrap:hover { 
-  background: rgba(13,2,33,0.5); 
-  transform: translateZ(0) scale(1.02); 
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-}
+.logoWrap:hover { transform: translateZ(0) scale(1.02); }
 
 .svg {
   display: block;
-  width: 140px;
-  height: 40px;
+  width: 220px; /* larger for visibility */
+  height: 68px;
 }
 
-.tagline {
-  font-size: 0.85rem;
-  color: #9ca3af; /* slate-400 */
-  white-space: nowrap;
+/* Glitch effect: small horizontal and vertical displacements to maintain readability */
+.glitchActive { animation: glitchXY var(--glitch-duration) steps(10, end); }
+@keyframes glitchXY {
+  0% { transform: translate3d(0,0,0); }
+  10% { transform: translate3d(1px, -1px, 0); }
+  20% { transform: translate3d(-1px, 1px, 0); }
+  30% { transform: translate3d(2px, -1px, 0); }
+  40% { transform: translate3d(-2px, 1px, 0); }
+  50% { transform: translate3d(1px, 2px, 0); }
+  60% { transform: translate3d(-1px, -2px, 0); }
+  70% { transform: translate3d(1px, 1px, 0); }
+  80% { transform: translate3d(-1px, -1px, 0); }
+  90% { transform: translate3d(0.5px, 1px, 0); }
+  100% { transform: translate3d(0,0,0); }
 }
 
-/* Subtle glitch accent using transform only */
-.glitch {
-  animation: glitchShift 2.5s cubic-bezier(0.22,1,0.36,1) infinite;
+/* Purple overlay layer: visible and animated only during glitch */
+.glitchPurple {
+  opacity: 0;
+  transform: translate3d(0,0,0);
 }
-@keyframes glitchShift {
-  0%, 92%, 100% { transform: translate3d(0,0,0); opacity: 1; }
-  94% { transform: translate3d(0.5px, -0.6px, 0); opacity: 0.96; }
-  96% { transform: translate3d(-0.6px, 0.4px, 0); opacity: 0.98; }
+.glitchActive .glitchPurple {
+  opacity: 0.8;
+  animation: glitchPurple var(--glitch-duration) steps(10, end);
+}
+@keyframes glitchPurple {
+  0% { transform: translate3d(0,0,0); filter: drop-shadow(0 0 2px rgba(139,92,246,0.6)); }
+  25% { transform: translate3d(-1px, 1px, 0); filter: drop-shadow(0 0 4px rgba(139,92,246,0.7)); }
+  50% { transform: translate3d(1.5px, -1.5px, 0); filter: drop-shadow(0 0 6px rgba(139,92,246,0.75)); }
+  75% { transform: translate3d(-1px, -1px, 0); filter: drop-shadow(0 0 4px rgba(139,92,246,0.7)); }
+  100% { transform: translate3d(0,0,0); filter: drop-shadow(0 0 2px rgba(139,92,246,0.6)); }
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .logoWrap, .svg, .glitch { animation: none !important; transition: none !important; }
+  .logoWrap, .svg, .glitchActive { animation: none !important; transition: none !important; }
 }

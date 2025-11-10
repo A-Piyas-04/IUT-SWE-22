@@ -337,10 +337,10 @@ export default function ClassRoutine() {
             className="grid"
             style={{
               gridTemplateColumns: `120px repeat(${timeOrder.length}, minmax(160px, 1fr))`,
-              gridTemplateRows: `auto repeat(${days.length}, var(--slotH))`,
-              // Responsive, equal-height slots that adapt to viewport
-              // without overlapping or mismatched dimensions
-              "--slotH": "clamp(72px, 10vw, 116px)"
+              gridTemplateRows: `auto repeat(${days.length}, var(--slotHActual))`,
+              // Base slot height and the 20% increased actual height
+              "--slotH": "clamp(72px, 10vw, 116px)",
+              "--slotHActual": "calc(var(--slotH) * 1.2)",
             }}
           >
             {/* Header row */}
@@ -423,7 +423,17 @@ export default function ClassRoutine() {
                         className="p-3 border-t border-white/5"
                         style={{ gridColumn: `span ${spanLen}` }}
                       >
-                        <div className={`flex flex-col h-full overflow-hidden gap-2 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}>
+                        <div
+                          className={`flex flex-col h-full overflow-hidden gap-2 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}
+                          style={{
+                            // Proportional scaling of internal elements by 20%
+                            "--scale": 1.2,
+                            transform: "scale(var(--scale))",
+                            transformOrigin: "top left",
+                            // Ensure scaled content fits within the cell bounds horizontally
+                            width: "calc(100% / var(--scale))",
+                          }}
+                        >
                           {starting.map((item, idx) => {
                             const courseName = resolveCourseNameOnly(item.course, data.course_names, data.courses);
                             const nameClass = isMLCCCombined

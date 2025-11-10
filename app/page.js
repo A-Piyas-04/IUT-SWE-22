@@ -3,6 +3,7 @@
  */
 import ClassRoutine from "../components/ClassRoutine";
 import UpcomingReminder from "../components/UpcomingReminder";
+import SectionDivider from "../components/SectionDivider";
 import UrgentBox from "../components/UrgentBox";
 
 export default function HomePage() {
@@ -18,11 +19,11 @@ export default function HomePage() {
       </section>
 
       {/* Top horizontal sections: Upcoming Reminder and Urgent */}
-      <section aria-label="Highlights" className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <section aria-label="Highlights" className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-dark/40 ring-1 ring-accent-cyan/30 rounded-xl p-2">
         <UpcomingReminder />
         <UrgentBox />
       </section>
-
+      <SectionDivider />
       <ClassRoutine />
     </div>
   );

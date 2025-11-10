@@ -213,7 +213,7 @@ export default function ClassRoutine() {
       {/* Rotating container wraps entire routine card */}
       <div className="relative w-full overflow-auto" style={{ minHeight: wrapperMinHeight }}>
         <div ref={rotatorRef} className="inline-block transition-transform duration-300 ease-in-out" style={rotatorStyle}>
-      <div ref={cardRef} className="bg-surface/80 border border-white/10 rounded-xl shadow-card backdrop-blur-sm">
+      <div ref={cardRef} className="bg-surface/80 border border-white/10 ring-1 ring-accent-lime/30 rounded-xl shadow-card backdrop-blur-sm">
         <div className="flex items-end justify-between p-4 sm:p-6 border-b border-white/10">
           <div>
             <h2 id="routine-title" className="text-xl sm:text-2xl font-semibold text-slate-100">
@@ -325,8 +325,8 @@ export default function ClassRoutine() {
         <div
           className="w-full overflow-auto"
           style={{
-            /* Reserve a configurable height, but cap to viewport for responsiveness */
-            height: "min(var(--routine-scroll-height), 80vh)",
+            /* Increase height by 25% while staying responsive via viewport cap */
+            height: "min(calc(var(--routine-scroll-height) * 1.25), 80vh)",
             scrollBehavior: "smooth",
           }}
         >

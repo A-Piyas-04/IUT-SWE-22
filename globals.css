@@ -49,6 +49,19 @@
     text-shadow: 0 0 6px rgba(168,255,0,0.35), 0 0 12px rgba(168,255,0,0.25);
   }
 
+  /* Page transitions: subtle fade/translate for 350ms */
+  .page-transition {
+    will-change: opacity, transform;
+    transition: opacity 350ms ease, transform 350ms ease;
+  }
+  .page-transition.pt-pre { opacity: 0; transform: translateY(6px); }
+  .page-transition.pt-enter { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition { transition: none !important; }
+    .page-transition.pt-pre { opacity: 1; transform: none; }
+  }
+
   /* Futuristic divider with light trail and subtle particles */
   .futuristic-divider {
     min-height: 30px;

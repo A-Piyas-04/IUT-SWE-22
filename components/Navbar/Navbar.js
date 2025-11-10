@@ -11,7 +11,7 @@ export default function Navbar() {
   const items = getNavItems();
 
   return (
-    <nav aria-label="Primary navigation" className={styles.navbar}>
+    <nav role="navigation" aria-label="Primary navigation" className={styles.navbar}>
       {/* Mobile hamburger */}
       <button
         type="button"
@@ -44,6 +44,7 @@ export default function Navbar() {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                title={item.label}
                 className={`${styles.link} ${active ? styles.active : ""}`}
               >
                 {item.label}
@@ -54,12 +55,12 @@ export default function Navbar() {
       </ul>
 
       {/* Mobile panel */}
-      <div id="navbar-mobile-panel" className={styles.mobilePanel} hidden={!open}>
+      <div id="navbar-mobile-panel" className={styles.mobilePanel} data-open={open}>
         <div className={styles.mobileList}>
           {items.map((item) => {
             const active = isActivePath(pathname, item.href);
             return (
-              <Link key={`m-${item.href}`} href={item.href} aria-current={active ? "page" : undefined} className={`${styles.link} ${active ? styles.active : ""}`}>
+              <Link key={`m-${item.href}`} href={item.href} aria-current={active ? "page" : undefined} title={item.label} className={`${styles.link} ${active ? styles.active : ""}`}>
                 {item.label}
               </Link>
             );

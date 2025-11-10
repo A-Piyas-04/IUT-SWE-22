@@ -5,7 +5,7 @@
  */
 "use client";
 import { Fragment, useEffect, useMemo, useState } from "react";
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+// Days will be derived from JSON so all available days are shown
 
 // Map each day to a softer accent color for variety
 const dayAccent = {
@@ -67,6 +67,20 @@ export default function ClassRoutine() {
     const keys = Object.keys(data.time_slots);
     const order = ["1", "2", "3", "4", "break", "5", "6"].filter((k) => keys.includes(k));
     return order;
+  }, [data]);
+
+  const days = useMemo(() => {
+    if (!data) return [];
+    const keys = Object.keys(data.routine || {});
+    const knownOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    return keys.sort((a, b) => {
+      const ia = knownOrder.indexOf(a);
+      const ib = knownOrder.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b);
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
   }, [data]);
 
   function normalizeCode(code) {
@@ -140,30 +154,32 @@ export default function ClassRoutine() {
           </div>
         </div>
 
-        {/* Grid container: 1 time column + 5 day columns */}
+        {/* Grid container: 1 day column (left) + time range columns (top) */}
         <div className="w-full overflow-x-auto">
-          <div className="grid grid-cols-[110px_repeat(5,_1fr)]">
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: `120px repeat(${timeOrder.length}, 1fr)` }}
+          >
             {/* Header row */}
             <div className="p-3 font-medium text-slate-300 border-b border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm">
-              Time
+              Day
             </div>
-            {days.map((day) => (
-              <div
-                key={`hdr-${day}`}
-                className={`p-3 font-medium border-b bg-dark/40 ${headerAccentClasses(day)}`}
-              >
-                {day}
+            {timeOrder.map((slotKey) => (
+              <div key={`hdr-${slotKey}`} className="p-3 font-medium border-b bg-dark/40 text-slate-300">
+                {data.time_slots[slotKey]}
               </div>
             ))}
 
-            {/* Body rows */}
-            {timeOrder.map((slotKey) => (
-              <Fragment key={slotKey}>
-                <div className="p-3 text-slate-300 border-t border-white/5 bg-dark/60 sticky left-0 backdrop-blur-sm">
-                  {data.time_slots[slotKey]}
+            {/* Body rows: each row is a day */}
+            {days.map((day) => (
+              <Fragment key={`row-${day}`}>
+                {/* Day header cell */}
+                <div className={`p-3 font-medium text-slate-300 border-t border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm ${headerAccentClasses(day)}`}>
+                  {day}
                 </div>
-                {days.map((day) => {
-                  // Break row spans all columns visually
+
+                {/* Cells per time slot for this day */}
+                {timeOrder.map((slotKey) => {
                   if (slotKey === "break") {
                     return (
                       <div key={`${day}-break`} className="p-3 border-t border-white/5">
@@ -187,9 +203,7 @@ export default function ClassRoutine() {
                   return (
                     <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
                       <div
-                        className={`inline-flex flex-col gap-1 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(
-                          day
-                        )} transition-colors`}
+                        className={`inline-flex flex-col gap-1 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}
                       >
                         <div className="flex items-center gap-2">
                           <span

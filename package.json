@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "test:schedule": "node lib/schedule.test.js"
+    "test:schedule": "node lib/schedule.test.js",
+    "test:nav": "node lib/nav.test.js"
   },
   "dependencies": {
     "next": "latest",

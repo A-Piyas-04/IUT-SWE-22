@@ -100,6 +100,18 @@ export default function ClassRoutine() {
     return mapped.join(" / ");
   }
 
+  function resolveCourseNameOnly(courseRaw, courseNamesMap, coursesList) {
+    const parts = courseRaw.split("/").map((p) => p.trim());
+    const names = parts.map((p) => {
+      const norm = normalizeCode(p);
+      const byMap = courseNamesMap?.[norm];
+      if (byMap) return byMap;
+      const found = coursesList?.find((c) => c.code === p || normalizeCode(c.code) === norm);
+      return found ? found.title : p;
+    });
+    return names.join(" / ");
+  }
+
   function resolveInstructors(ids, teachersMap) {
     if (!ids) return [];
     return ids.map((id) => teachersMap?.[id] || id);
@@ -158,10 +170,16 @@ export default function ClassRoutine() {
         <div className="w-full overflow-x-auto">
           <div
             className="grid"
-            style={{ gridTemplateColumns: `120px repeat(${timeOrder.length}, 1fr)` }}
+            style={{
+              gridTemplateColumns: `120px repeat(${timeOrder.length}, minmax(160px, 1fr))`,
+              gridTemplateRows: `auto repeat(${days.length}, var(--slotH))`,
+              // Responsive, equal-height slots that adapt to viewport
+              // without overlapping or mismatched dimensions
+              ['--slotH']: 'clamp(72px, 10vw, 116px)'
+            }}
           >
             {/* Header row */}
-            <div className="p-3 font-medium text-slate-300 border-b border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm">
+            <div className="p-3 font-medium text-slate-300 border-b border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm z-10">
               Day
             </div>
             {timeOrder.map((slotKey) => (
@@ -174,71 +192,90 @@ export default function ClassRoutine() {
             {days.map((day) => (
               <Fragment key={`row-${day}`}>
                 {/* Day header cell */}
-                <div className={`p-3 font-medium text-slate-300 border-t border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm ${headerAccentClasses(day)}`}>
+                <div className={`p-3 font-medium text-slate-300 border-t border-white/10 bg-dark/60 sticky left-0 backdrop-blur-sm z-10 ${headerAccentClasses(day)}`}>
                   {day}
                 </div>
 
-                {/* Cells per time slot for this day */}
-                {timeOrder.map((slotKey) => {
-                  if (slotKey === "break") {
-                    return (
-                      <div key={`${day}-break`} className="p-3 border-t border-white/5">
-                        <div className="text-slate-400 text-sm">Break</div>
-                      </div>
-                    );
-                  }
+                {/* Cells per time slot for this day with slot-range support */}
+                {(() => {
+                  const entries = (data.routine?.[day] || []).map((e) => {
+                    if (Array.isArray(e.slot_range)) {
+                      const [start, end] = e.slot_range;
+                      return { ...e, start: String(start), end: String(end ?? start) };
+                    }
+                    if (e.slot != null) {
+                      return { ...e, start: String(e.slot), end: String(e.slot) };
+                    }
+                    return e;
+                  });
 
-                  const entries = data.routine?.[day] || [];
-                  const item = entries.find((e) => String(e.slot) === slotKey);
-                  if (!item) {
-                    return (
-                      <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
-                        <div className="text-slate-500 text-sm">—</div>
-                      </div>
-                    );
-                  }
+                  const cells = [];
+                  for (let i = 0; i < timeOrder.length; i++) {
+                    const slotKey = timeOrder[i];
+                    if (slotKey === "break") {
+                      cells.push(
+                        <div key={`${day}-break`} className="p-3 border-t border-white/5">
+                          <div className="h-full flex items-center justify-center rounded-md bg-dark/50 text-slate-400 text-sm">Break</div>
+                        </div>
+                      );
+                      continue;
+                    }
 
-                  const label = resolveCourseLabel(item.course, data.course_names, data.courses);
-                  const instructorNames = resolveInstructors(item.instructors, data.teachers);
-                  return (
-                    <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
+                    const starting = entries.filter((e) => e.start === slotKey);
+                    const spanLen = starting.reduce((max, e) => {
+                      const sidx = timeOrder.indexOf(e.start);
+                      const eidx = timeOrder.indexOf(e.end);
+                      const len = Math.max(1, eidx - sidx + 1);
+                      return Math.max(max, len);
+                    }, 1);
+
+                    if (starting.length === 0) {
+                      cells.push(
+                        <div key={`${day}-${slotKey}`} className="p-3 border-t border-white/5">
+                          <div className="h-full flex items-center justify-center text-slate-500 text-sm">—</div>
+                        </div>
+                      );
+                      continue;
+                    }
+
+                    // Detect ML/CC combined slots (both tags present in the same slot)
+                    const hasML = starting.some((e) => e.tag === "ML");
+                    const hasCC = starting.some((e) => e.tag === "CC");
+                    const isMLCCCombined = hasML && hasCC;
+
+                    cells.push(
                       <div
-                        className={`inline-flex flex-col gap-1 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}
+                        key={`${day}-${slotKey}`}
+                        className="p-3 border-t border-white/5"
+                        style={{ gridColumn: `span ${spanLen}` }}
                       >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`inline-block h-2 w-2 rounded-full ${
-                              dayAccent[day] === "magenta"
-                                ? "bg-accent-magenta"
-                                : dayAccent[day] === "lime"
-                                ? "bg-accent-lime"
-                                : "bg-accent-cyan"
-                            }`}
-                          />
-                          <span className="text-sm sm:text-base text-slate-200 font-medium">
-                            {label}
-                          </span>
-                        </div>
-                        <div className="text-xs text-slate-400 flex flex-wrap items-center gap-x-3 gap-y-1">
-                          {instructorNames?.length ? (
-                            <span title="Instructors">{instructorNames.join(", ")}</span>
-                          ) : null}
-                          {item.room ? <span title="Room">Room: {item.room}</span> : null}
-                          {item.section ? <span title="Section">Section: {item.section}</span> : null}
-                          {item.duration ? <span title="Duration">{item.duration}</span> : null}
-                          {item.tag ? (
-                            <span
-                              className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] bg-white/5 text-slate-300"
-                              title="Tag"
-                            >
-                              {item.tag}
-                            </span>
-                          ) : null}
+                        <div className={`flex flex-col h-full overflow-hidden gap-2 rounded-md px-3 py-2 bg-dark/70 ${cellAccentClasses(day)} transition-colors`}>
+                          {starting.map((item, idx) => {
+                            const courseName = resolveCourseNameOnly(item.course, data.course_names, data.courses);
+                            const nameClass = isMLCCCombined
+                              ? "text-[0.7rem] sm:text-[0.75rem] text-slate-200 font-medium overflow-hidden text-ellipsis whitespace-nowrap"
+                              : "text-sm sm:text-base text-slate-200 font-medium";
+                            const roomClass = isMLCCCombined
+                              ? "text-[0.7rem] sm:text-[0.75rem] text-accent-cyan font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
+                              : "text-sm sm:text-base text-accent-cyan font-semibold";
+                            return (
+                              <div key={`${day}-${slotKey}-item-${idx}`} className="flex flex-col">
+                                <span className={nameClass} title={courseName}>{courseName}</span>
+                                {item.room ? (
+                                  <span className={roomClass} title={`Room: ${item.room}`}>Room: {item.room}</span>
+                                ) : null}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+
+                    i += spanLen - 1;
+                  }
+
+                  return cells;
+                })()}
               </Fragment>
             ))}
           </div>

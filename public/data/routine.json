@@ -34,40 +34,212 @@
   },
   "routine": {
     "Monday": [
-      { "slot": 1, "course": "Math 4544", "instructors": ["SRR", "X1"], "room": "L-4", "section": "B" },
-      { "slot": 2, "course": "SWE 4502", "duration": "100 mins", "instructors": ["LNL", "X4"], "room": "L-5", "section": "B" },
-      { "slot": 3, "course": "Math 4544", "instructors": ["SRR", "X1"], "room": "L-4", "section": "A" },
-      { "slot": 4, "course": "SWE 4504", "instructors": ["ARN", "AAK"], "room": "L-3", "section": "A" }
+      {
+        "course": "Math 4544",
+        "slot_range": [1, 2],
+        "time": "08:00–10:30",
+        "instructors": ["SRR", "X1"],
+        "room": "L-4",
+        "section": "A"
+      },
+      {
+        "course": "Math 4544",
+        "slot_range": [1, 2],
+        "time": "08:00–10:30",
+        "instructors": ["SRR", "X1"],
+        "room": "L-4",
+        "section": "B"
+      },
+      {
+        "course": "SWE 4504",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["ARN", "AAK"],
+        "room": "L-3",
+        "section": "A"
+      },
+      {
+        "course": "SWE 4504",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["ARN", "AAK"],
+        "room": "L-3",
+        "section": "B"
+      }
     ],
     "Tuesday": [
-      { "slot": 1, "course": "SWE 4504", "instructors": ["ARN", "AAK"], "room": "L-3", "section": "B" },
-      { "slot": 2, "course": "CSE 4501", "instructors": ["SB"], "room": "R-304" },
-      { "slot": 3, "course": "SWE 4503", "instructors": ["ARN"], "room": "R-304" },
-      { "slot": 4, "course": "CSE 4553", "instructors": ["HM"], "room": "R-304", "tag": "ML" },
-      { "slot": 5, "course": "CSE 4559", "instructors": ["NY"], "room": "R-510", "tag": "CC" },
-      { "slot": 6, "course": "Math 4543", "instructors": ["SRR"], "room": "R-304" }
+      {
+        "course": "SWE 4538",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["ASH", "X2"],
+        "room": "L-5",
+        "section": "A"
+      },
+      {
+        "course": "SWE 4538",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["ASH", "X2"],
+        "room": "L-5",
+        "section": "B"
+      },
+      {
+        "course": "CSE 4501",
+        "slot_range": [4],
+        "time": "11:45-13:00",
+        "instructors": ["SB"],
+        "room": "R-304"
+      },
+      {
+        "course": "SWE 4503",
+        "slot_range": [2],
+        "time": "09:15–10:30",
+        "instructors": ["ARN"],
+        "room": "R-304"
+      },
+      {
+        "course": "CSE 4553",
+        "slot_range": [3],
+        "time": "10:30–11:45",
+        "instructors": ["HM"],
+        "room": "R-304",
+        "tag": "ML"
+      },
+      {
+        "course": "CSE 4559",
+        "slot_range": [3],
+        "time": "10:30–11:45",
+        "instructors": ["NY"],
+        "room": "R-510",
+        "tag": "CC"
+      },
+      {
+        "course": "Math 4543",
+        "slot_range": [1],
+        "time": "08:00–09:15",
+        "instructors": ["SRR"],
+        "room": "R-304"
+      }
     ],
     "Wednesday": [
-      { "slot": 1, "course": "SWE 4538", "instructors": ["ASH", "X2"], "room": "L-5", "section": "A" },
-      { "slot": 2, "course": "SWE 4538", "instructors": ["ASH", "X2"], "room": "L-5", "section": "B" },
-      { "slot": 3, "course": "SWE 4503", "instructors": ["ARN"], "room": "R-302" },
-      { "slot": 4, "course": "CSE 4553", "instructors": ["HM"], "room": "R-304", "tag": "MLSWE" },
-      { "slot": 5, "course": "SWE 4537", "instructors": ["ASH"], "room": "R-302" },
-      { "slot": 6, "course": "SWE 4501", "instructors": ["LNL"], "room": "R-302" }
+      {
+        "course": "SWE 4503",
+        "slot_range": [1],
+        "time": "08:00–09:15",
+        "instructors": ["ARN"],
+        "room": "R-302"
+      },
+      {
+        "course": "SWE 4537",
+        "slot_range": [2],
+        "time": "09:15–10:30",
+        "instructors": ["ASH"],
+        "room": "R-302"
+      },
+      {
+        "course": "SWE 4501",
+        "slot_range": [3],
+        "time": "10:30–11:45",
+        "instructors": ["LNL"],
+        "room": "R-302"
+      },
+      {
+        "course": "CSE 4553",
+        "slot_range": [4],
+        "time": "11:45–13:00",
+        "instructors": ["HM"],
+        "room": "R-304",
+        "tag": "ML"
+      },
+      {
+        "course": "CSE 4559",
+        "slot_range": [4],
+        "time": "11:45–13:00",
+        "instructors": ["NY"],
+        "room": "R-510",
+        "tag": "CC"
+      }
     ],
     "Thursday": [
-      { "slot": 1, "course": "CSE 4559", "instructors": ["NY"], "room": "L-6", "tag": "CC" },
-      { "slot": 2, "course": "CSE 4501", "instructors": ["SB"], "room": "R-304" },
-      { "slot": 3, "course": "SWE 4537", "instructors": ["ASH"], "room": "R-304" },
-      { "slot": 4, "course": "SWE 4502", "duration": "100 mins", "instructors": ["LNL", "KH"], "room": "L-2", "section": "A" },
-      { "slot": 5, "course": "CSE 4560 / CSE 4750", "instructors": ["NY", "ARN"], "room": "L-5", "tag": "CC" },
-      { "slot": 6, "course": "CSE 4554", "instructors": ["HM", "X2"], "room": "L-5", "tag": "ML" }
+      {
+        "course": "SWE 4537",
+        "slot_range": [1],
+        "time": "08:00–09:15",
+        "instructors": ["ASH"],
+        "room": "R-304"
+      },
+      {
+        "course": "CSE 4501",
+        "slot_range": [2],
+        "time": "09:15–10:30",
+        "instructors": ["SB"],
+        "room": "R-304"
+      },
+      {
+        "course": "SWE 4502",
+        "slot_range": [3, 4],
+        "time": "10:30–13:00",
+        "instructors": ["LNL", "KH"],
+        "room": "L-2",
+        "section": "A"
+      },
+      {
+        "course": "CSE 4502",
+        "slot_range": [3, 4],
+        "time": "10:30–13:00",
+        "instructors": ["SB", "X3"],
+        "room": "L-4",
+        "section": "B"
+      },
+      {
+        "course": "CSE 4554",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["HM", "X2"],
+        "room": "L-5",
+        "tag": "ML"
+      },
+      {
+        "course": "CSE 4560 / CSE 4750",
+        "slot_range": [5, 6],
+        "time": "14:30–17:00",
+        "instructors": ["NY", "ARN"],
+        "room": "L-5",
+        "tag": "CC"
+      }
     ],
     "Friday": [
-      { "slot": 1, "course": "CSE 4502", "duration": "100 mins", "instructors": ["SB", "MMA"], "room": "L-2", "section": "A" },
-      { "slot": 2, "course": "SWE 4501", "instructors": ["LNL"], "room": "R-301" },
-      { "slot": 3, "course": "Math 4543", "instructors": ["SRR"], "room": "R-301" },
-      { "slot": 4, "course": "CSE 4502", "duration": "100 mins", "instructors": ["SB", "X3"], "room": "L-2", "section": "B" }
+      {
+        "course": "Math 4543",
+        "slot_range": [1],
+        "time": "08:00–09:15",
+        "instructors": ["SRR"],
+        "room": "R-301"
+      },
+      {
+        "course": "SWE 4501",
+        "slot_range": [2],
+        "time": "09:15–10:30",
+        "instructors": ["LNL"],
+        "room": "R-301"
+      },
+      {
+        "course": "CSE 4502",
+        "slot_range": [3, 4],
+        "time": "10:30–13:00",
+        "instructors": ["SB", "MMA"],
+        "room": "L-2",
+        "section": "A"
+      },
+      {
+        "course": "SWE 4502",
+        "slot_range": [3, 4],
+        "time": "10:30–13:00",
+        "instructors": ["LNL", "X4"],
+        "room": "L-5",
+        "section": "B"
+      }
     ]
   },
   "courses": [
@@ -88,14 +260,14 @@
     { "code": "CSE 4750", "title": "Project (Cloud Computing)", "instructors": ["NY", "ARN"] }
   ],
   "course_names": {
-    "Math4543": "NumericalMethods",
-    "CSE4501": "OperatingSystems",
-    "SWE4501": "DesignPatterns",
-    "SWE4503": "SoftwareSecurity",
-    "Math4544": "NumericalMethodsLab",
-    "CSE4502": "OperatingSystemsLab",
-    "SWE4502": "DesignPatternsLab",
-    "SWE4504": "SoftwareSecurityLab",
-    "SWE4506": "DesignProjectI"
+    "Math4543": "Numerical Methods",
+    "CSE4501": "Operating Systems",
+    "SWE4501": "Design Patterns",
+    "SWE4503": "Software Security",
+    "Math4544": "Numerical Methods Lab",
+    "CSE4502": "Operating Systems Lab",
+    "SWE4502": "Design Patterns Lab",
+    "SWE4504": "Software Security Lab",
+    "SWE4506": "Design Project I"
   }
 }

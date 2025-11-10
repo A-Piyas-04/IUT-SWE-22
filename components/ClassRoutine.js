@@ -326,8 +326,11 @@ export default function ClassRoutine() {
           className="w-full overflow-auto"
           style={{
             /* Increase height by 25% while staying responsive via viewport cap */
-            height: "min(calc(var(--routine-scroll-height) * 1.25), 80vh)",
+            height: "min(calc(var(--routine-scroll-height) * 1.9), 190vh)",
             scrollBehavior: "smooth",
+            /* Lower the routine content slightly for clearer spacing */
+            paddingTop: "clamp(12px, 2vw, 184px)",
+            boxSizing: "border-box",
           }}
         >
           <div

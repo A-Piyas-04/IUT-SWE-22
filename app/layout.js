@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import RouteTransition from "../components/RouteTransition";
 import Footer from "../components/Footer";
 import { Space_Grotesk } from "next/font/google";
+import PerfMonitor from "../components/PerfMonitor";
 
 export const metadata = {
   title: "IUT SWE 22",
@@ -28,6 +29,8 @@ export default function RootLayout({ children }) {
           <RouteTransition>{children}</RouteTransition>
         </main>
         <Footer />
+        {/* Dev-only performance monitor */}
+        <PerfMonitor />
       </body>
     </html>
   );

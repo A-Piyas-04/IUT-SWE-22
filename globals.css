@@ -18,6 +18,9 @@
   --neon-lime: #a8ff00;
   /* Configurable routine scroll height with sensible default */
   --routine-scroll-height: 700px;
+  /* Global animation constants for synchronized timing */
+  --anim-duration: 300ms;
+  --anim-ease: cubic-bezier(0.16, 1, 0.3, 1); /* ease-out-expo for smoother transitions */
 }
 
 @layer base {
@@ -49,13 +52,13 @@
     text-shadow: 0 0 6px rgba(168,255,0,0.35), 0 0 12px rgba(168,255,0,0.25);
   }
 
-  /* Page transitions: slower and more pronounced for smoothness */
+  /* Page transitions: fast, smooth, hardware-accelerated */
   .page-transition {
     will-change: opacity, transform;
-    transition: opacity 900ms ease-in-out,
-      transform 900ms ease-in-out;
+    transition: opacity var(--anim-duration) var(--anim-ease),
+      transform var(--anim-duration) var(--anim-ease);
   }
-  .page-transition.pt-pre { opacity: 0; transform: translateY(14px); }
+  .page-transition.pt-pre { opacity: 0; transform: translateY(10px); }
   .page-transition.pt-enter { opacity: 1; transform: translateY(0); }
 
   @media (prefers-reduced-motion: reduce) {
@@ -114,6 +117,17 @@
   @keyframes particles {
     0%, 100% { transform: translate3d(0,0,0); }
     50% { transform: translate3d(2px, -1px, 0); }
+  }
+
+  /* Loading bar animation for route-level loading state */
+  @keyframes loadingBar {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(50%); }
+    100% { transform: translateX(300%); }
+  }
+  .loading-bar {
+    will-change: transform;
+    animation: loadingBar var(--anim-duration) var(--anim-ease) infinite;
   }
 
   /* Accessibility: respect reduced motion */

@@ -5,14 +5,14 @@ import { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 
 /**
  * RouteTransition
- * - Production-ready page transition wrapper.
+ * - Optimized smooth page transition wrapper.
  * - Supports forward/backward navigation using the browser history index.
- * - Uses transform/opacity-only animations for 60fps performance.
+ * - Uses transform3d/opacity-only animations for 60fps performance.
  * - Respects reduced motion preferences.
  */
 export default function RouteTransition({
   children,
-  duration = 0.9,
+  duration = 0.3,
   type = "fade-slide",
   restoreScrollOnBack = true,
   resetScrollOnForward = false,
@@ -23,6 +23,7 @@ export default function RouteTransition({
   const [direction, setDirection] = useState(1); // 1 forward, -1 back
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(true); // gate visibility to prevent pre-animation flash
+  const mountedRef = useRef(false);
   const scrollMapRef = useRef(new Map());
 
   // Update direction before paint to avoid incorrect initial offset
@@ -32,11 +33,21 @@ export default function RouteTransition({
     const nextDirection = currentIdx > prevIdxRef.current ? 1 : -1;
     setDirection(nextDirection);
     prevIdxRef.current = currentIdx;
-    // hide new page until animation starts
-    setReady(false);
+    // On initial mount, keep content visible. On subsequent route changes, gate visibility
+    if (mountedRef.current) {
+      setReady(false);
+      // Use RAF to ensure smooth transition start
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setReady(true));
+      });
+    } else {
+      setReady(true);
+      mountedRef.current = true;
+    }
   }, [pathname]);
 
-  const ease = "easeInOut"; // smooth, natural easing for gradual transitions
+  // Optimized easing: ease-out-expo for smoother, more natural feel
+  const ease = [0.16, 1, 0.3, 1]; // ease-out-expo
 
   const variants = useMemo(() => {
     if (prefersReduced) {
@@ -50,16 +61,44 @@ export default function RouteTransition({
     switch (type) {
       case "fade-scale":
         return {
-          initial: { opacity: 0, scale: 0.975, filter: "saturate(0.96)", willChange: "opacity, transform" },
-          enter: { opacity: 1, scale: 1, filter: "saturate(1)", transition: { duration, ease } },
-          exit: { opacity: 0, scale: 0.975, filter: "saturate(0.96)", transition: { duration, ease } },
+          initial: { 
+            opacity: 0, 
+            scale: 0.98, 
+            filter: "saturate(0.95)",
+          },
+          enter: { 
+            opacity: 1, 
+            scale: 1, 
+            filter: "saturate(1)",
+            transition: { duration, ease } 
+          },
+          exit: { 
+            opacity: 0, 
+            scale: 0.98, 
+            filter: "saturate(0.95)",
+            transition: { duration: duration * 0.8, ease: [0.4, 0, 1, 1] } 
+          },
         };
       case "fade-slide":
       default:
         return {
-          initial: { opacity: 0, x: direction * 24, willChange: "opacity, transform" },
-          enter: { opacity: 1, x: 0, transition: { duration, ease } },
-          exit: { opacity: 0, x: direction * -24, transition: { duration, ease } },
+          initial: { 
+            opacity: 0, 
+            x: direction * 6,
+            scale: 0.99,
+          },
+          enter: { 
+            opacity: 1, 
+            x: 0,
+            scale: 1,
+            transition: { duration, ease } 
+          },
+          exit: { 
+            opacity: 0, 
+            x: direction * -6,
+            scale: 0.99,
+            transition: { duration: duration * 0.8, ease: [0.4, 0, 1, 1] } 
+          },
         };
     }
   }, [direction, prefersReduced, duration, type]);
@@ -90,18 +129,29 @@ export default function RouteTransition({
       aria-atomic="true"
       role="region"
       aria-busy={busy}
-      style={{ position: "relative", visibility: ready ? "visible" : "hidden" }}
+      style={{ 
+        position: "relative", 
+        visibility: ready ? "visible" : "hidden",
+        minHeight: "1px", // Prevent layout shift
+      }}
     >
       <AnimatePresence mode="wait" initial={false} onExitComplete={handleExitComplete}>
         <motion.div
           key={pathname}
-          onAnimationStart={() => { setBusy(true); setReady(true); }}
+          onAnimationStart={() => { 
+            setBusy(true); 
+            setReady(true); 
+          }}
           onAnimationComplete={() => setBusy(false)}
           initial="initial"
           animate="enter"
           exit="exit"
           variants={variants}
-          style={{ willChange: "transform, opacity" }}
+          style={{ 
+            willChange: "transform, opacity",
+            backfaceVisibility: "hidden",
+            perspective: 1000,
+          }}
         >
           {children}
         </motion.div>

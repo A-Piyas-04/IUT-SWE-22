@@ -2,6 +2,14 @@
 
 This project uses a production-grade page transition system based on Framer Motion and Next.js App Router.
 
+## Design System Spec
+
+- Duration: `300ms` (allowed variance ±50ms)
+- Easing: `cubic-bezier(0.4, 0, 0.2, 1)`
+- Properties: `transform`, `opacity` only
+- Hinting: `will-change: transform, opacity`
+- Synchronization: all page-level animations complete simultaneously
+
 ## Components
 
 - `components/RouteTransition.js` wraps the page content and animates on route changes.
@@ -37,11 +45,19 @@ import RouteTransition from "../components/RouteTransition";
 
 ## Configuration
 
-- Duration range: 0.3–0.5s recommended.
-- Easing: cubic-bezier `[0.22, 1, 0.36, 1]`.
+- Duration range: 300ms default (±50ms where needed).
+- Easing: `cubic-bezier(0.4, 0, 0.2, 1)`.
 - Variant types can be extended with additional motion patterns.
 
 ## Notes
 
 - Scroll restoration: Next.js preserves scroll on back/forward; transitions do not override this.
 - Async content: `AnimatePresence` with `mode="wait"` ensures exit completes before enter.
+ 
+## Performance Targets
+
+- First Contentful Paint < 1s
+- Cumulative Layout Shift < 0.1
+- Total Blocking Time < 200ms
+
+See `components/PerfMonitor.js` for dev-time monitors and `lib/rafDebounce.js` for RAF-based debouncing helpers.

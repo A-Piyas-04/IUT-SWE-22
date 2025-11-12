@@ -27,7 +27,7 @@ export default function PageTransition({ children }) {
     <div
       aria-live="polite"
       className={`page-transition ${visible ? "pt-enter" : "pt-pre"}`}
-      style={{ visibility: visible ? "visible" : "hidden" }}
+      style={{ visibility: visible ? "visible" : "hidden", willChange: "transform, opacity" }}
       key={pathname}
     >
       {children}
